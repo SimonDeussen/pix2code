@@ -11,6 +11,7 @@ from .Config import *
 from .AModel import *
 
 
+
 class pix2code(AModel):
     def __init__(self, input_shape, output_size, output_path):
         AModel.__init__(self, input_shape, output_size, output_path)

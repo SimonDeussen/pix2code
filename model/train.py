@@ -11,6 +11,10 @@ import sys
 from classes.dataset.Generator import *
 from classes.model.pix2code import *
 
+import os
+
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
 
 def run(input_path, output_path, is_memory_intensive=False, pretrained_model=None):
     np.random.seed(1234)
