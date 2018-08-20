@@ -4,9 +4,12 @@ from __future__ import absolute_import
 __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 import tensorflow as tf
+
 config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction=0.5
 config.gpu_options.allow_growth = True
 config.log_device_placement=True
+
 sess = tf.Session(config=config)
 
 import sys
@@ -15,9 +18,6 @@ from classes.dataset.Generator import *
 from classes.model.pix2code import *
 
 import os
-
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
 
 def run(input_path, output_path, is_memory_intensive=False, pretrained_model=None):
     np.random.seed(1234)
