@@ -16,7 +16,7 @@ from classes.model.pix2code import *
 
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 
 def run(input_path, output_path, is_memory_intensive=False, pretrained_model=None):
