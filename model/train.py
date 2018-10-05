@@ -6,7 +6,7 @@ __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 import tensorflow as tf
 
 config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction=0.8
+# config.gpu_options.per_process_gpu_memory_fraction=0.8
 config.gpu_options.allow_growth = True
 config.log_device_placement=True
 
