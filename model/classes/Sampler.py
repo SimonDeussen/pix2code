@@ -100,17 +100,11 @@ class Sampler:
         if require_sparse_label:
             current_context = Utils.sparsify(current_context, self.output_size)
 
-        print("CURRENT CONTEXT", current_context)    
-
         beam = BeamSearch(beam_width=beam_width)
-
-        print("BEAM", beam)
 
         self.recursive_beam_search(model, input_img, current_context, beam, beam.root, sequence_length)
 
         predicted_sequence, probas_sequence = beam.search()
-
-        print("PREDICTED SEQUENCE", predicted_sequence)
 
         for k in range(0, len(predicted_sequence)):
             prediction = predicted_sequence[k]
