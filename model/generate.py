@@ -32,10 +32,10 @@ model.load(trained_model_name)
 sampler = Sampler(trained_weights_path, input_shape, output_size, CONTEXT_LENGTH)
 
 for f in os.listdir(input_path):
-    if f.find(".png") != -1:
+    if f.find(".jpg") != -1:
         evaluation_img = Utils.get_preprocessed_img("{}/{}".format(input_path, f), IMAGE_SIZE)
 
-        file_name = f[:f.find(".png")]
+        file_name = f[:f.find(".jpg")]
 
         if search_method == "greedy":
             result, _ = sampler.predict_greedy(model, np.array([evaluation_img]))
