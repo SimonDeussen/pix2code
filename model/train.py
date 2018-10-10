@@ -51,7 +51,7 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
     
 
     model_summary = open(output_path + "model_summary" + ".txt", "w+")
-    model_summary.write(str(model.model.summary()))
+    model.model.summary(print_fn=lambda x: model_summary.write(x + '\n'))
     model_summary.write("")
     model_summary.write("CONTEXT_LENGTH " + str(CONTEXT_LENGTH))
     model_summary.write("IMAGE_SIZE " + str(IMAGE_SIZE))
