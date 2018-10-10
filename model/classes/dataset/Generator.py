@@ -21,7 +21,7 @@ class Generator:
             sample_in_batch_counter = 0
 
             for i in range(0, len(gui_paths)):
-                if img_paths[i].find(".png") != -1:
+                if img_paths[i].find(IMG_DATA_TYPE) != -1:
                     img = Utils.get_preprocessed_img(img_paths[i], IMAGE_SIZE)
                 else:
                     img = np.load(img_paths[i])["features"]
@@ -35,6 +35,10 @@ class Generator:
                         voc.append(token)
                         token_sequence.append(token)
                 token_sequence.append(END_TOKEN)
+
+                print(token_sequence)
+
+                print(ksdhfsd)
 
                 suffix = [PLACEHOLDER] * CONTEXT_LENGTH
 
