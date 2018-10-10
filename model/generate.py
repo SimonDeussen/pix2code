@@ -5,6 +5,7 @@ __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 import os
 import sys
+import json
 
 from classes.Sampler import *
 from classes.model.pix2code import *
@@ -53,4 +54,4 @@ for f in os.listdir(input_path):
             out_f.write(result.replace(START_TOKEN, "").replace(END_TOKEN, ""))
 
         with open("{}/{}.details".format(output_path, file_name), 'w') as out_f:
-            out_f.write(probas)
+            out_f.write(json.dumbs(probas))
