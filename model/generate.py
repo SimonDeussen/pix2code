@@ -38,9 +38,13 @@ for f in os.listdir(input_path):
         file_name = f[:f.find(IMG_DATA_TYPE)]
 
         if search_method == "greedy":
-            result, _ = sampler.predict_greedy(model, np.array([evaluation_img]))
-            print("Result greedy PROBAS", _)
+            result, probas = sampler.predict_greedy(model, np.array([evaluation_img]))
             print("Result greedy: {}".format(result))
+
+            details = []
+            for i in range(len(result)):
+                details.append({"token": result[i], "probas": probas[i]})
+
         else:
             beam_width = int(search_method)
             print("Search with beam width: {}".format(beam_width))
@@ -49,3 +53,6 @@ for f in os.listdir(input_path):
 
         with open("{}/{}.gui".format(output_path, file_name), 'w') as out_f:
             out_f.write(result.replace(START_TOKEN, "").replace(END_TOKEN, ""))
+
+        with open("{}/{}.details".format(output_path, file_name), 'w') as out_f:
+            out_f.write(details))
