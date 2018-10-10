@@ -37,10 +37,6 @@ class Generator:
                             token_sequence.append(token)
                 token_sequence.append(END_TOKEN)
 
-                print(img_paths[i])
-                print(token_sequence)
-
-                print(ksdhfsd)
 
                 suffix = [PLACEHOLDER] * CONTEXT_LENGTH
 
