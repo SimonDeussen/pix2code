@@ -35,10 +35,11 @@ for f in os.listdir(input_path):
     if f.find(".jpg") != -1:
         evaluation_img = Utils.get_preprocessed_img("{}/{}".format(input_path, f), IMAGE_SIZE)
         
-        file_name = f[:f.find(".jpg")]
+        file_name = f[:f.find(IMG_DATA_TYPE)]
 
         if search_method == "greedy":
             result, _ = sampler.predict_greedy(model, np.array([evaluation_img]))
+            print("Result greedy PROBAS", _)
             print("Result greedy: {}".format(result))
         else:
             beam_width = int(search_method)

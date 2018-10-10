@@ -22,7 +22,6 @@ class Vocabulary:
 
     def append(self, token):
         if token not in self.vocabulary:
-            print("TOKEN", token)
             self.vocabulary[token] = self.size
             self.token_lookup[self.size] = token
             self.size += 1
