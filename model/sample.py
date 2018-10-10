@@ -28,7 +28,7 @@ output_size = meta_dataset[1]
 
 model = pix2code(input_shape, output_size, trained_weights_path)
 model.load(trained_model_name)
-model.summary()
+model.AModel.summary()
 
 sampler = Sampler(trained_weights_path, input_shape, output_size, CONTEXT_LENGTH)
 
