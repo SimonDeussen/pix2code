@@ -41,11 +41,7 @@ for f in os.listdir(input_path):
             result, probas = sampler.predict_greedy(model, np.array([evaluation_img]))
             print("Result greedy: {}".format(result))
 
-            print(len(result))
-            print(len(probas))
-            details = []
-            for i in range(len(result)):
-                details.append({"token": result[i], "probas": probas[i]})
+        
 
         else:
             beam_width = int(search_method)
@@ -57,4 +53,4 @@ for f in os.listdir(input_path):
             out_f.write(result.replace(START_TOKEN, "").replace(END_TOKEN, ""))
 
         with open("{}/{}.details".format(output_path, file_name), 'w') as out_f:
-            out_f.write(details)
+            out_f.write(probas)
