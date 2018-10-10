@@ -41,6 +41,8 @@ for f in os.listdir(input_path):
             result, probas = sampler.predict_greedy(model, np.array([evaluation_img]))
             print("Result greedy: {}".format(result))
 
+            print(len(result))
+            print(len(probas))
             details = []
             for i in range(len(result)):
                 details.append({"token": result[i], "probas": probas[i]})
