@@ -32,7 +32,7 @@ class Generator:
                     line = line.replace(",", " ,").replace("\n", " \n")
                     tokens = line.split(" ")
                     for token in tokens:
-                        if token != "":
+                        if token != "" and token != " ":
                             voc.append(token)
                             token_sequence.append(token)
                 token_sequence.append(END_TOKEN)
