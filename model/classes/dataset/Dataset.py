@@ -32,8 +32,8 @@ class Dataset:
                 gui_paths.append(path_gui)
                 file_name = f[:f.find(".gui")]
 
-                if os.path.isfile("{}/{}.png".format(path, file_name)):
-                    path_img = "{}/{}.png".format(path, file_name)
+                if os.path.isfile("{}/{}" + IMG_DATA_TYPE.format(path, file_name)):
+                    path_img = "{}/{}" + IMG_DATA_TYPE.format(path, file_name)
                     img_paths.append(path_img)
                 elif os.path.isfile("{}/{}.npz".format(path, file_name)):
                     path_img = "{}/{}.npz".format(path, file_name)
@@ -49,8 +49,8 @@ class Dataset:
                 gui = open("{}/{}".format(path, f), 'r')
                 file_name = f[:f.find(".gui")]
 
-                if os.path.isfile("{}/{}.png".format(path, file_name)):
-                    img = Utils.get_preprocessed_img("{}/{}.png".format(path, file_name), IMAGE_SIZE)
+                if os.path.isfile("{}/{}" + IMG_DATA_TYPE.format(path, file_name)):
+                    img = Utils.get_preprocessed_img("{}/{}" + IMG_DATA_TYPE.format(path, file_name), IMAGE_SIZE)
                     self.append(file_name, gui, img)
                 elif os.path.isfile("{}/{}.npz".format(path, file_name)):
                     img = np.load("{}/{}.npz".format(path, file_name))["features"]
