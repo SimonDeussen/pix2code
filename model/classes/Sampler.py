@@ -51,7 +51,7 @@ class Sampler:
 
             predictions += self.voc.token_lookup[prediction]
 
-            out_probas.append({"prediction": self.voc.token_lookup[prediction], "probas": probas})
+            out_probas.append({"prediction": self.voc.token_lookup[prediction], "probas": probas.tolist()})
 
             if self.voc.token_lookup[prediction] == END_TOKEN:
                 break
