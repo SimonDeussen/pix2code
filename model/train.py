@@ -50,9 +50,10 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
     model = pix2code(input_shape, output_size, output_path)
     
 
+    print( output_path + "model_summary" )
     model_summary = open(output_path + "model_summary" + ".txt", "w+")
     model.model.summary(print_fn=lambda x: model_summary.write(x + '\n'))
-    model_summary.write("")
+    model_summary.write("\n")
     model_summary.write("CONTEXT_LENGTH " + str(CONTEXT_LENGTH) + '\n')
     model_summary.write("IMAGE_SIZE " + str(IMAGE_SIZE) + '\n')
     model_summary.write("BATCH_SIZE " + str(BATCH_SIZE) + '\n')
