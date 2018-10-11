@@ -35,5 +35,6 @@ class Utils:
 
     @staticmethod
     def distort_image(img):
+        import cv2
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return img
