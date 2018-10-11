@@ -3,7 +3,7 @@ __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 from keras.layers import Input, Dense, Dropout, \
                          RepeatVector, LSTM, concatenate, \
-                         Conv2D, MaxPooling2D, Flatten
+                         Conv2D, MaxPooling2D, Flatten, GRU
 from keras.models import Sequential, Model
 from keras.optimizers import RMSprop
 from keras import *
@@ -45,16 +45,22 @@ class pix2code(AModel):
         encoded_image = image_model(visual_input)
 
         language_model = Sequential()
-        language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        language_model.add(LSTM(128, return_sequences=True))
+        # language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
+        # language_model.add(LSTM(128, return_sequences=True))
+
+        language_model.add(GRU(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
+        language_model.add(GRU(128, return_sequences=True))
 
         textual_input = Input(shape=(CONTEXT_LENGTH, output_size))
         encoded_text = language_model(textual_input)
 
         decoder = concatenate([encoded_image, encoded_text])
 
-        decoder = LSTM(512, return_sequences=True)(decoder)
-        decoder = LSTM(512, return_sequences=False)(decoder)
+        
+        decoder = GRU(512, return_sequences=True)(decoder)
+        decoder = GRU(512, return_sequences=False)(decoder)
+        # decoder = LSTM(512, return_sequences=True)(decoder)
+        # decoder = LSTM(512, return_sequences=False)(decoder)
         decoder = Dense(output_size, activation='softmax')(decoder)
 
         self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)

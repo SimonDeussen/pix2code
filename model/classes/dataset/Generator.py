@@ -7,6 +7,7 @@ from classes.dataset.Dataset import *
 from classes.Vocabulary import *
 from classes.model.Config import *
 
+import cv2
 
 class Generator:
     @staticmethod
@@ -26,6 +27,8 @@ class Generator:
                 else:
                     img = np.load(img_paths[i])["features"]
                 gui = open(gui_paths[i], 'r')
+
+                img = Utils.distort_image(img)
 
                 token_sequence = [START_TOKEN]
                 for line in gui:

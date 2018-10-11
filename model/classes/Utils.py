@@ -32,3 +32,8 @@ class Utils:
         cv2.imshow("view", image)
         cv2.waitKey(0)
         cv2.destroyWindow("view")
+
+    @staticmethod
+    def distort_image(img):
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        return img
