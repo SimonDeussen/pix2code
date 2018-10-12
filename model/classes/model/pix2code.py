@@ -61,6 +61,7 @@ class pix2code(AModel):
         decoder = GRU(512, return_sequences=False)(decoder)
         # decoder = LSTM(512, return_sequences=True)(decoder)
         # decoder = LSTM(512, return_sequences=False)(decoder)
+        
         decoder = Dense(output_size, activation='softmax')(decoder)
 
         self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)

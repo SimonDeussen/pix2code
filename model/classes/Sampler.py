@@ -21,7 +21,7 @@ class Sampler:
 
         self.context_length = context_length
 
-    def predict_greedy(self, model, input_img, require_sparse_label=True, sequence_length=150, verbose=True):
+    def predict_greedy(self, model, input_img, require_sparse_label=True, sequence_length=150, verbose=False):
         current_context = [self.voc.vocabulary[PLACEHOLDER]] * (self.context_length - 1)
         current_context.append(self.voc.vocabulary[START_TOKEN])
         if require_sparse_label:
