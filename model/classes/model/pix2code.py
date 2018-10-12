@@ -45,11 +45,11 @@ class pix2code(AModel):
         encoded_image = image_model(visual_input)
 
         language_model = Sequential()
-        # language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        # language_model.add(LSTM(128, return_sequences=True))
+        language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
+        language_model.add(LSTM(128, return_sequences=True))
 
-        language_model.add(GRU(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        language_model.add(GRU(128, return_sequences=True))
+        # language_model.add(GRU(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
+        # language_model.add(GRU(128, return_sequences=True))
 
         textual_input = Input(shape=(CONTEXT_LENGTH, output_size))
         encoded_text = language_model(textual_input)
