@@ -47,7 +47,7 @@ for f in os.listdir(input_path):
         else:
             beam_width = int(search_method)
             print("Search with beam width: {}".format(beam_width))
-            result, _ = sampler.predict_beam_search(model, np.array([evaluation_img]), beam_width=beam_width)
+            result, probas = sampler.predict_beam_search(model, np.array([evaluation_img]), beam_width=beam_width)
             print("Result beam: {}".format(result))
 
         with open("{}/{}.gui".format(output_path, file_name), 'w') as out_f:

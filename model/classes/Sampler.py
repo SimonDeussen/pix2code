@@ -106,11 +106,14 @@ class Sampler:
 
         predicted_sequence, probas_sequence = beam.search()
 
+        token_list = []
+
         for k in range(0, len(predicted_sequence)):
             prediction = predicted_sequence[k]
             probas = probas_sequence[k]
             out_probas.append(probas)
 
             predictions += self.voc.token_lookup[prediction]
+            token_list.append({"prediction": self.voc.token_lookup[prediction], "probas": probas.tolist()})
 
-        return predictions, out_probas
+        return predictions, token_list
