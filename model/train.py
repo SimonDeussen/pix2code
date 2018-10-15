@@ -70,9 +70,14 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
         model.model.load_weights(pretrained_model)
 
     if not is_memory_intensive:
-        model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words)
+        history = model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words)
     else:
-        model.fit_generator(generator, steps_per_epoch=steps_per_epoch)
+        history = model.fit_generator(generator, steps_per_epoch=steps_per_epoch)
+
+    model_history = open(output_path + "model_history" + ".txt", "w+")
+    model_history.write(str(history.history.keys()) + "\n")
+    model_history.write(str(history.history['acc']) + "\n")
+    model_history.write(str(history.history['loss']) + "\n")
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
