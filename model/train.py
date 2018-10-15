@@ -74,10 +74,11 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
     else:
         history = model.fit_generator(generator, steps_per_epoch=steps_per_epoch)
 
-    model_history = open(output_path + "model_history" + ".txt", "w+")
-    model_history.write(str(history.history.keys()) + "\n")
-    model_history.write(str(history.history['acc']) + "\n")
-    model_history.write(str(history.history['loss']) + "\n")
+    print(history)
+    # model_history = open(output_path + "model_history" + ".txt", "w+")
+    # model_history.write(str(history.history.keys()) + "\n")
+    # model_history.write(str(history.history['acc']) + "\n")
+    # model_history.write(str(history.history['loss']) + "\n")
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
