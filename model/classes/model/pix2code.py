@@ -48,8 +48,8 @@ class pix2code(AModel):
         # language_model.add(LSTM(256, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
         # language_model.add(LSTM(256, return_sequences=True))
 
-        language_model.add(GRU(192, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        language_model.add(GRU(192, return_sequences=True))
+        language_model.add(GRU(64, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
+        language_model.add(GRU(64, return_sequences=True))
 
         textual_input = Input(shape=(CONTEXT_LENGTH, output_size))
         encoded_text = language_model(textual_input)
@@ -57,8 +57,8 @@ class pix2code(AModel):
         decoder = concatenate([encoded_image, encoded_text])
 
         
-        decoder = GRU(768, return_sequences=True)(decoder)
-        decoder = GRU(768, return_sequences=False)(decoder)
+        decoder = GRU(368, return_sequences=True)(decoder)
+        decoder = GRU(368, return_sequences=False)(decoder)
         # decoder = LSTM(512, return_sequences=True)(decoder)
         # decoder = LSTM(512, return_sequences=False)(decoder)
         
