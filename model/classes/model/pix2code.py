@@ -54,7 +54,7 @@ class pix2code(AModel):
 
         # language_model.add(LSTM(192, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
         # language_model.add(LSTM(192, return_sequences=True))
-1
+    
         # language_model.add(GRU(256, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
         # language_model.add(GRU(256, return_sequences=True))
 
