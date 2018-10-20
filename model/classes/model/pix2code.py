@@ -18,7 +18,7 @@ class pix2code(AModel):
         self.name = "pix2code"
 
         image_model = Sequential()
-        image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
+        image_model.add(Conv2D(32, (2, 2), padding='valid', activation='relu', input_shape=input_shape))
         image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
         image_model.add(MaxPooling2D(pool_size=(2, 2)))
         image_model.add(Dropout(0.25))
@@ -58,11 +58,11 @@ class pix2code(AModel):
         # language_model.add(GRU(256, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
         # language_model.add(GRU(256, return_sequences=True))
 
-        language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        language_model.add(LSTM(128, return_sequences=True))
+        # language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
+        # language_model.add(LSTM(128, return_sequences=True))
 
-        # language_model.add(GRU(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        # language_model.add(GRU(128, return_sequences=True))
+        language_model.add(GRU(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
+        language_model.add(GRU(128, return_sequences=True))
 
         textual_input = Input(shape=(CONTEXT_LENGTH, output_size))
         encoded_text = language_model(textual_input)
@@ -79,11 +79,11 @@ class pix2code(AModel):
         # decoder = LSTM(512, return_sequences=True)(decoder)
         # decoder = LSTM(1024, return_sequences=False)(decoder)
         
-        # decoder = GRU(512, return_sequences=True)(decoder)
-        # decoder = GRU(512, return_sequences=False)(decoder)
+        decoder = GRU(564, return_sequences=True)(decoder)
+        decoder = GRU(564, return_sequences=False)(decoder)
 
-        decoder = LSTM(512, return_sequences=True)(decoder)
-        decoder = LSTM(512, return_sequences=False)(decoder)
+        # decoder = LSTM(512, return_sequences=True)(decoder)
+        # decoder = LSTM(512, return_sequences=False)(decoder)
         
         decoder = Dense(output_size, activation='softmax')(decoder)
 
