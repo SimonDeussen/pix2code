@@ -10,7 +10,7 @@ from keras import *
 from .Config import *
 from .AModel import *
 
-
+from keras.applications.xception import Xception
 
 class pix2code(AModel):
     def __init__(self, input_shape, output_size, output_path):
@@ -19,7 +19,7 @@ class pix2code(AModel):
 
         image_model = Sequential()
 
-        xception = keras.applications.xception.Xception(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+        xception = Xception(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
         xception.summary()
 
         first_six_xception_modules = xception.layers[1:66] # first 16 layer handle input, afterwards, 10 layers per module
