@@ -18,26 +18,41 @@ class pix2code(AModel):
         self.name = "pix2code"
 
         image_model = Sequential()
-        image_model.add(Conv2D(32, (2, 2), padding='valid', activation='relu', input_shape=input_shape))
-        image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
-        image_model.add(MaxPooling2D(pool_size=(2, 2)))
-        image_model.add(Dropout(0.25))
 
-        image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
-        image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
-        image_model.add(MaxPooling2D(pool_size=(2, 2)))
-        image_model.add(Dropout(0.25))
+        xception = keras.applications.xception.Xception(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+        xception.summary()
 
-        image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
-        image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
-        image_model.add(MaxPooling2D(pool_size=(2, 2)))
-        image_model.add(Dropout(0.25))
+        first_six_xception_modules = xception.layers[1:66] # first 16 layer handle input, afterwards, 10 layers per module
 
-        image_model.add(Flatten())
+        for layer in first_six_xception_modules:
+            layer.trainable = False
+
+        xception.layers.pop() # remove last layer
+
+        image_model.add(xception)
         image_model.add(Dense(1024, activation='relu'))
         image_model.add(Dropout(0.3))
-        image_model.add(Dense(1024, activation='relu'))
-        image_model.add(Dropout(0.3))
+
+        # image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
+        # image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        # image_model.add(Dropout(0.25))
+
+        # image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        # image_model.add(Dropout(0.25))
+
+        # image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        # image_model.add(Dropout(0.25))
+
+        # image_model.add(Flatten())
+        # image_model.add(Dense(1024, activation='relu'))
+        # image_model.add(Dropout(0.3))
+        # image_model.add(Dense(1024, activation='relu'))
+        # image_model.add(Dropout(0.3))
 
         image_model.add(RepeatVector(CONTEXT_LENGTH))
 
