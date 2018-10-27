@@ -9,6 +9,7 @@ from keras.optimizers import RMSprop
 from keras import *
 from .Config import *
 from .AModel import *
+from keras.callbacks import ModelCheckpoint
 
 from keras.applications.xception import Xception
 
@@ -19,40 +20,40 @@ class pix2code(AModel):
 
         image_model = Sequential()
 
-        # xception = Xception(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
-        # xception.summary()
+        xception = Xception(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
+        xception.summary()
 
-        # first_six_xception_modules = xception.layers[1:66] # first 16 layer handle input, afterwards, 10 layers per module
+        first_six_xception_modules = xception.layers[1:66] # first 16 layer handle input, afterwards, 10 layers per module
 
-        # for layer in first_six_xception_modules:
-        #     layer.trainable = False
+        for layer in first_six_xception_modules:
+            layer.trainable = False
 
-        # xception.layers.pop() # remove last layer
+        xception.layers.pop() # remove last layer
 
-        # image_model.add(xception)
+        image_model.add(xception)
+        image_model.add(Dense(1024, activation='relu'))
+        image_model.add(Dropout(0.3))
+
+        # image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
+        # image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        # image_model.add(Dropout(0.25))
+
+        # image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        # image_model.add(Dropout(0.25))
+
+        # image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
+        # image_model.add(MaxPooling2D(pool_size=(2, 2)))
+        # image_model.add(Dropout(0.25))
+
+        # image_model.add(Flatten())
         # image_model.add(Dense(1024, activation='relu'))
         # image_model.add(Dropout(0.3))
-
-        image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
-        image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
-        image_model.add(MaxPooling2D(pool_size=(2, 2)))
-        image_model.add(Dropout(0.25))
-
-        image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
-        image_model.add(Conv2D(64, (3, 3), padding='valid', activation='relu'))
-        image_model.add(MaxPooling2D(pool_size=(2, 2)))
-        image_model.add(Dropout(0.25))
-
-        image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
-        image_model.add(Conv2D(128, (3, 3), padding='valid', activation='relu'))
-        image_model.add(MaxPooling2D(pool_size=(2, 2)))
-        image_model.add(Dropout(0.25))
-
-        image_model.add(Flatten())
-        image_model.add(Dense(1024, activation='relu'))
-        image_model.add(Dropout(0.3))
-        image_model.add(Dense(1024, activation='relu'))
-        image_model.add(Dropout(0.3))
+        # image_model.add(Dense(1024, activation='relu'))
+        # image_model.add(Dropout(0.3))
 
         image_model.add(RepeatVector(CONTEXT_LENGTH))
 
@@ -107,12 +108,22 @@ class pix2code(AModel):
         optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer)
 
-    def fit(self, images, partial_captions, next_words):
-        self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1)
+    def fit(self, images, partial_captions, next_words, output_path):
+
+        filepath= output_path + "weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+        checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='max')
+        callbacks_list = [checkpoint]
+
+        self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1, callbacks=callbacks_list)
         self.save()
 
-    def fit_generator(self, generator, steps_per_epoch):
-        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1)
+    def fit_generator(self, generator, steps_per_epoch, output_path):
+        filepath= output_path + "weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+        checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='max')
+        callbacks_list = [checkpoint]
+
+
+        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1,  callbacks=callbacks_list)
         self.save()
 
     def predict(self, image, partial_caption):
