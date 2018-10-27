@@ -117,7 +117,7 @@ class pix2code(AModel):
         self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1, callbacks=callbacks_list)
         self.save()
 
-    def fit_generator(self, generator, steps_per_epoch, output_path):
+    def fit_generator(self, generator, output_path, steps_per_epoch ):
         filepath= output_path + "weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='max')
         callbacks_list = [checkpoint]

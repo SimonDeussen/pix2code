@@ -72,7 +72,7 @@ def run(input_path, output_path, is_memory_intensive=False, pretrained_model=Non
     if not is_memory_intensive:
         history = model.fit(dataset.input_images, dataset.partial_sequences, dataset.next_words, output_path)
     else:
-        history = model.fit_generator(generator, steps_per_epoch=steps_per_epoch, output_path)
+        history = model.fit_generator(generator, output_path, steps_per_epoch=steps_per_epoch)
 
     print(history)
     # model_history = open(output_path + "model_history" + ".txt", "w+")
