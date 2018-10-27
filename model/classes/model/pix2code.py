@@ -110,7 +110,7 @@ class pix2code(AModel):
 
     def fit(self, images, partial_captions, next_words, output_path):
 
-        filepath= output_path + "weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+        filepath= output_path + "weights-improvement-{epoch:02d}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='max')
         callbacks_list = [checkpoint]
 
@@ -118,7 +118,7 @@ class pix2code(AModel):
         self.save()
 
     def fit_generator(self, generator, output_path, steps_per_epoch ):
-        filepath= output_path + "weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+        filepath= output_path + "weights-improvement-{epoch:02d}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='max')
         callbacks_list = [checkpoint]
 
