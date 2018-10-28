@@ -21,7 +21,6 @@ class pix2code(AModel):
         image_model = Sequential()
 
         xception = Xception(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
-        xception.summary()
 
         first_six_xception_modules = xception.layers[1:66] # first 16 layer handle input, afterwards, 10 layers per module
 
@@ -110,20 +109,20 @@ class pix2code(AModel):
 
     def fit(self, images, partial_captions, next_words, output_path):
 
-        filepath= output_path + "weights-improvement-{epoch:02d}.hdf5"
-        checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=False, mode='max')
-        callbacks_list = [checkpoint]
+        # filepath= output_path + "weights-improvement-{epoch:02d}.hdf5"
+        # checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=False, mode='max')
+        # callbacks_list = [checkpoint]
 
-        self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1, callbacks=callbacks_list)
+        self.model.fit([images, partial_captions], next_words, shuffle=False, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1)
         self.save()
 
     def fit_generator(self, generator, output_path, steps_per_epoch ):
-        filepath= output_path + "weights-improvement-{epoch:02d}.hdf5"
-        checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=False, mode='max')
-        callbacks_list = [checkpoint]
+        # filepath= output_path + "weights-improvement-{epoch:02d}.hdf5"
+        # checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=False, mode='max')
+        # callbacks_list = [checkpoint]
 
 
-        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1,  callbacks=callbacks_list)
+        self.model.fit_generator(generator, steps_per_epoch=steps_per_epoch, epochs=EPOCHS, verbose=1)
         self.save()
 
     def predict(self, image, partial_caption):
