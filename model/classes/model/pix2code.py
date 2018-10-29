@@ -3,7 +3,7 @@ __author__ = 'Tony Beltramelli - www.tonybeltramelli.com'
 
 from keras.layers import Input, Dense, Dropout, \
                          RepeatVector, LSTM, concatenate, \
-                         Conv2D, MaxPooling2D, Flatten, GRU
+                         Conv2D, MaxPooling2D, Flatten, GRU, GlobalAveragePooling2D
 from keras.models import Sequential, Model
 from keras.optimizers import RMSprop
 from keras import *
@@ -18,20 +18,8 @@ class pix2code(AModel):
         AModel.__init__(self, input_shape, output_size, output_path)
         self.name = "pix2code"
 
-        image_model = Sequential()
-
-        xception = Xception(include_top=True, weights='imagenet', input_tensor=None, input_shape=None, pooling=None, classes=1000)
-
-        first_six_xception_modules = xception.layers[1:66] # first 16 layer handle input, afterwards, 10 layers per module
-
-        for layer in first_six_xception_modules:
-            layer.trainable = False
-
-        xception.layers.pop() # remove last layer
-
-        image_model.add(xception)
-        image_model.add(Dense(1024, activation='relu'))
-        image_model.add(Dropout(0.3))
+        # OLD SETUP
+        #image_model = Sequential()
 
         # image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu', input_shape=input_shape))
         # image_model.add(Conv2D(32, (3, 3), padding='valid', activation='relu'))
@@ -54,27 +42,31 @@ class pix2code(AModel):
         # image_model.add(Dense(1024, activation='relu'))
         # image_model.add(Dropout(0.3))
 
-        image_model.add(RepeatVector(CONTEXT_LENGTH))
+        #image_model.add(RepeatVector(CONTEXT_LENGTH))
+
+        #visual_input = Input(shape=input_shape)
+        #encoded_image = image_model(visual_input)
+
+        # NEW SETUP
 
         visual_input = Input(shape=input_shape)
-        encoded_image = image_model(visual_input)
+
+        xception = Xception(include_top=False, weights='imagenet', input_tensor=visual_input)
+
+        first_eight_xception_modules = xception.layers[1:86] # first 16 layer handle input, afterwards, 10 layers per module
+
+        for layer in first_eight_xception_modules:
+            layer.trainable = False
+
+        x = xception.output
+        x = GlobalAveragePooling2D()(x)
+        x = Dense(1024, activation='relu')(x)
+        x = Dropout(0.3)(x)
+        encoded_image = RepeatVector(CONTEXT_LENGTH)(x)
+
+        image_model = Model(inputs=xception.input, outputs=encoded_image)
 
         language_model = Sequential()
-        # language_model.add(LSTM(256, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        # language_model.add(LSTM(256, return_sequences=True))
-
-
-        # language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        # language_model.add(LSTM(256, return_sequences=True))
-
-        # language_model.add(LSTM(192, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        # language_model.add(LSTM(192, return_sequences=True))
-    
-        # language_model.add(GRU(256, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        # language_model.add(GRU(256, return_sequences=True))
-
-        # language_model.add(LSTM(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
-        # language_model.add(LSTM(128, return_sequences=True))
 
         language_model.add(GRU(128, return_sequences=True, input_shape=(CONTEXT_LENGTH, output_size)))
         language_model.add(GRU(128, return_sequences=True))
@@ -83,26 +75,15 @@ class pix2code(AModel):
         encoded_text = language_model(textual_input)
 
         decoder = concatenate([encoded_image, encoded_text])
-
-        # decoder = LSTM(512, return_sequences=True)(decoder)
-        # decoder = LSTM(512, return_sequences=False)(decoder)
-
-
-        #decoder = GRU(386, return_sequences=True)(decoder)
-        #decoder = GRU(386, return_sequences=False)(decoder)
-
-        # decoder = LSTM(512, return_sequences=True)(decoder)
-        # decoder = LSTM(1024, return_sequences=False)(decoder)
         
         decoder = GRU(564, return_sequences=True)(decoder)
         decoder = GRU(564, return_sequences=False)(decoder)
-
-        # decoder = LSTM(512, return_sequences=True)(decoder)
-        # decoder = LSTM(512, return_sequences=False)(decoder)
         
         decoder = Dense(output_size, activation='softmax')(decoder)
 
-        self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)
+        self.model = Model(inputs=[image_model.input, textual_input], outputs=decoder)
+        # OLD STUFF
+        #self.model = Model(inputs=[visual_input, textual_input], outputs=decoder)
 
         optimizer = RMSprop(lr=0.0001, clipvalue=1.0)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer)
